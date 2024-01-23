@@ -7,36 +7,31 @@ import com.company.design.proxy.IBrowser;
 import com.company.design.singleton.AClazz;
 import com.company.design.singleton.BClazz;
 import com.company.design.singleton.SocketClient;
+import com.company.design.strategy.Base64Strategy;
+import com.company.design.strategy.Encorder;
+import com.company.design.strategy.EncordingStrategy;
+import com.company.design.strategy.NormalStrategy;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Main {
     public static void main(String[] args) {
-        /*
-        IBrowser browser = new BrowserProxy("www.naver.com");
-        browser.show();
-        browser.show();
-        browser.show();
-        */
-        AtomicLong start = new AtomicLong();
-        AtomicLong end = new AtomicLong();
+        Encorder encorder = new Encorder();
 
-        IBrowser aopBrowser = new AopBrowser("www.naver.com",
-                ()->{
-                    System.out.println("before");
-                    start.set(System.currentTimeMillis());
-                },
-                ()->{
-                    long now = System.currentTimeMillis();
-                    end.set(now - start.get());
-                }
-                );
+        //base64
+        EncordingStrategy base64 = new Base64Strategy();
 
-        aopBrowser.show();
-        System.out.println("time: "+end.get());
+        //normal
+        EncordingStrategy normal = new NormalStrategy();
 
-        aopBrowser.show();
-        System.out.println("time: "+end.get());
+        String message = "Hello";
+        encorder.setEncordingStrategy(base64);
+        String base64Result = encorder.getMessage(message);
+        System.out.println(base64Result);
+
+        encorder.setEncordingStrategy(normal);
+        String normalResult = encorder.getMessage(message);
+        System.out.println(normalResult);
 
     }
 
